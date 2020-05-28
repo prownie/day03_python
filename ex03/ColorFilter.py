@@ -10,7 +10,7 @@ class ImageProcessor:
             width = numpy.size(img, 1)
             height = numpy.size(img, 0)
             print("Loading image of dimensions {} x {}".format(width, height))
-            img = img[:,:,:3]
+            img = img[:, :, :3]
             return(img)
         except AttributeError:
             print("Error in loading file, wrong path")
@@ -29,50 +29,50 @@ class ImageProcessor:
         except:
             print("Can't display this")
 
+
 class ColorFilter:
 
     def invert(self, array):
         return(255 - array)
 
     def to_blue(self, array):
-        blue = array
-        blue[:,:,0] = numpy.zeros([array.shape[0],array.shape[1]])
-        blue[:,:,1] = numpy.zeros([array.shape[0],array.shape[1]])
-        ImageProcessor().display(blue)
+        blue = numpy.zeros(array.shape, dtype=numpy.uint8)
+        blue[:, :, 2] = array[:, :, 2]
         return(blue)
-    
+
     def to_green(self, array):
-        green = array
-        green[:,:,0] * 0
-        green[:,:,2] * 0
-        ImageProcessor().display(green[:,:,0] + green[:,:,1] + green[:,:,2])
-        return(green)
+        return(array * numpy.uint8([0, 1, 0]))
 
     def to_red(self, array):
-        print("shape de red = ",numpy.shape(red))
-        #red[:,:,1] = numpy.zeros([array.shape[0],array.shape[1]])
-        #red[:,:,2] = numpy.zeros([array.shape[0],array.shape[1]])
-        #ImageProcessor().display(red)
-        return(red)
+        return(array - self.to_green(array) - self.to_blue(array))
 
+    def celluloid(self, array, num=5):
+        if num < 2:
+            num = 2
+        linspace = (numpy.linspace(0, 255, num))
+        return array - array % int(linspace[1])
 
+    def to_grayscale(array, filter):
+        
 imp = ImageProcessor()
 arr = imp.load("rick.png")
 cf = ColorFilter()
 
 
-#imp.display(arr)
+imp.display(arr)
 
-#inverted = cf.invert(arr)
-#imp.display(inverted)
+inverted = cf.invert(arr)
+imp.display(inverted)
 
-#to_green = cf.to_green(arr)
-#imp.display(to_red)
+to_green = cf.to_green(arr)
+imp.display(to_green)
 
 to_blue = cf.to_blue(arr)
-#imp.display(to_blue)
+imp.display(to_blue)
 
 
-#to_green = cf.to_green(arr)
-#imp.display(to_green)
+to_red = cf.to_red(arr)
+imp.display(to_red)
 
+celluloid = cf.celluloid(arr, 3)
+imp.display(celluloid)
