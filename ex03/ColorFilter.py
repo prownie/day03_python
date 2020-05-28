@@ -53,9 +53,11 @@ class ColorFilter:
         return array - array % int(linspace[1])
 
     def to_grayscale(array, filter):
-        
+        pass
+
+
 imp = ImageProcessor()
-arr = imp.load("rick.png")
+arr = imp.load("elonmusk.jpg")
 cf = ColorFilter()
 
 
